@@ -1,0 +1,70 @@
+<!DOCTYPEHTML>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <title>AWS Meet-Up Cognito Demo</title>
+  </head>
+  <body style="font-family: 'Open Sans', sans-serif;max-width:580px; width:580px; background-color: #f6f6f6;-webkit-font-smoothing: antialiased; font-size: 14px; line-height: 1.4; margin: auto; display:block; padding: 0; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%;padding-top: 25px;">
+    <table border="0" cellpadding="0" cellspacing="0" width="580" style="box-sizing: border-box;background-color: #ffffff;width:580px;max-width:580px;">
+      <tbody>
+        <span class="preheader" style="color:transparent;display:none;height:0;max-height:0;max-width:0;opacity:0;overflow:hidden;visibility:hidden;width:0;mso-hide:all;">AWS Meet-Up Cognito Demo</span>
+        <table border="0" cellpadding="0" cellspacing="0" width="580" style="box-sizing: border-box;background-color: #ffffff;width:580px;max-width:580px;">
+          <tbody>
+            <tr style="background-color:#008cc1; color:#ffffff; text-align:center;">
+              <td>
+                <h1 style="width:470px; max-width:470px; margin: 25px auto; font-size:24px;">AWS Meet-Up Cognito Demo</h1>
+              </td>
+            </tr>
+            <tr style="background-color:#ffffff;">
+                <td>
+                  <div id="mainContent" style="margin:35px;color:#464646;max-width:580px; width:580px;">
+                  </div>
+                </td>
+            </tr>
+          </tbody>
+        </table>
+      </tbody>
+    </table>
+    <table border="0" cellpadding="0" cellspacing="0" width="580" style="box-sizing: border-box;width:580px;max-width:580px;">
+      <tbody>
+        <tr>
+          <td>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <script>
+      const checkAuthToken = function() {
+        const authString = localStorage.getItem('CognitoDemoSession');
+        const authTokens = JSON.parse(authString);
+        let headers;
+        if (authTokens !== undefined && authTokens !== null) {
+          headers = {
+            'auth-token': authTokens.accessToken,
+            'identity-token': authTokens.identityToken
+          };
+        }
+        $.ajax({
+          type: 'POST',
+          url: 'http://localhost:8000/validate',
+          contentType: 'application/json',
+          dataType: 'json',
+          headers: headers,
+          success: function(data) {
+            $('#mainContent').html('<h3 style="font-size:20px;margin-bottom:25px;">Welcome Back,</h3><p style="margin-bottom:35px;">Thank You, ' + data.userInfo.email + ' for logging back in</p>');
+          },
+          error: function(request, status, error) {
+            response = request.responseJSON
+            $('#mainContent').html('<h3 style="font-size:20px;margin-bottom:25px;">Access Denied,</h3><p style="margin-bottom:35px;">You can not access page for reason:<br/><label id="errorText" style="font-weight:bold;color:#c10010;text-decoration:none;">' + response.message + '</label></p>');
+          }
+        });
+      };
+
+      $(document).ready(function(){
+        checkAuthToken();
+      });
+    </script>
+  </body>
+  </html>

@@ -1,0 +1,101 @@
+<!DOCTYPEHTML>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <title>AWS Meet-Up Cognito Demo</title>
+  </head>
+  <body style="font-family: 'Open Sans', sans-serif;max-width:580px; width:580px; background-color: #f6f6f6;-webkit-font-smoothing: antialiased; font-size: 14px; line-height: 1.4; margin: auto; display:block; padding: 0; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%;padding-top: 25px;">
+    <table border="0" cellpadding="0" cellspacing="0" width="580" style="box-sizing: border-box;background-color: #ffffff;width:580px;max-width:580px;">
+      <tbody>
+        <span class="preheader" style="color:transparent;display:none;height:0;max-height:0;max-width:0;opacity:0;overflow:hidden;visibility:hidden;width:0;mso-hide:all;">AWS Meet-Up Cognito Demo</span>
+        <table border="0" cellpadding="0" cellspacing="0" width="580" style="box-sizing: border-box;background-color: #ffffff;width:580px;max-width:580px;">
+          <tbody>
+            <tr style="background-color:#008cc1; color:#ffffff; text-align:center;">
+              <td>
+                <h1 style="width:470px; max-width:470px; margin: 25px auto; font-size:24px;">AWS Meet-Up Cognito Demo</h1>
+              </td>
+            </tr>
+            <tr id="mainContent" style="background-color:#ffffff;">
+              <td>
+                <div style="margin:35px;color:#464646;max-width:580px; width:580px;">
+                  <h3 style="font-size:20px;margin-bottom:25px;">Welcome,</h3>
+                  <p style="margin-bottom:35px;">Please enter your username and password below:</p>
+                  <div style="background-color:#f0f0f0;margin-bottom:35px;max-width:580px; width:580px;">
+                    <p style="text-align:left;margin:auto;padding:35px 10px;">
+                      <label style="font-weight:bold;color:#008cc1;text-decoration:none;">Username:</label><br />
+                      <input id="cognitoName" type="text" name="username" /><br /><br />
+                      <label style="font-weight:bold;color:#008cc1;text-decoration:none;">Password:</label><br />
+                      <input id="cognitoPass" type="password" name="password" /><br /><br />
+                      <button style="background-color: #008cc1;
+                      border: none;
+                      color: white;
+                      padding: 7px 26px;
+                      text-align: center;
+                      text-decoration: none;
+                      display: inline-block;
+                      font-size: 16px;
+                      margin: 4px 2px;
+                      cursor: pointer;" id="loginButton">Login</button><br />
+                      <label id="errorText" style="font-weight:bold;color:#c10010;text-decoration:none;"></label><br />
+                    </p>
+                  </div>
+                  <p style="margin-bottom:35px;">If you don't have an account please click below to register:<br />
+                    <a style="background-color: #008cc1;
+                    border: none;
+                    color: white;
+                    padding: 7px 26px;
+                    text-align: center;
+                    text-decoration: none;
+                    display: inline-block;
+                    font-size: 16px;
+                    margin: 4px 2px;
+                    cursor: pointer;" href="http://localhost:8000/register">Registration</a>
+                  </p>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </tbody>
+    </table>
+    <table border="0" cellpadding="0" cellspacing="0" width="580" style="box-sizing: border-box;width:580px;max-width:580px;">
+      <tbody>
+        <tr>
+          <td>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <script>
+      const clickLogin = function() {
+        const username = $('#cognitoName').val();
+        const password = $('#cognitoPass').val();
+        $.ajax({
+          type: 'POST',
+          url: 'http://localhost:8000/login',
+          contentType: 'application/json',
+          dataType: 'json',
+          data: JSON.stringify({
+            "username": username,
+            "password": password
+          }),
+          success: function(data) {
+            const dataString = JSON.stringify(data);
+            localStorage.setItem('CognitoDemoSession', dataString);
+            window.location.href = 'http://localhost:8000/afterlogin';
+          },
+          error: function(request, status, error) {
+            response = request.responseJSON
+            $('#errorText').text(response.message);
+          }
+        });
+      };
+
+      $(document).ready(function(){
+        $('#loginButton').click(clickLogin);
+      });
+    </script>
+  </body>
+  </html>
