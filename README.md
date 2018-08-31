@@ -15,5 +15,6 @@ Code for the demo site shown at the Denver AWS Meet-up on 8/23/2018
 ### Required Environemnt Variables
 **USER_POOL_ID**
 * The User-Pool Id to the pool you've set up in AWS to go with this project
+
 **USER_POOL_CLIENT**
 * The Client Id of the app client you set up in AWS for your User-Pool
