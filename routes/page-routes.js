@@ -1,4 +1,4 @@
-// test_get.js
+// Routes to navigate to frontend pages
 
 const PageController = require('../controllers/pageController');
 

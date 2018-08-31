@@ -5,9 +5,16 @@ module.exports = function () {
   const AuthManager = require('../managers/AuthenticationManager');
   const { isNullOrWhiteSpace } = require('../util/UtilityFunctions');
 
+  /**
+   * call to log a user in
+   * @param {*} req request object containing headers and post data
+   * @param {*} res response object that will have data sent through it
+   */
 	this.login = function (req, res) {
     const username = req.body.username;
     const password = req.body.password;
+
+    // user pool enviroment variables
     const userPoolId = process.env.USER_POOL_ID;
     const clientId = process.env.USER_POOL_CLIENT;
     if (isNullOrWhiteSpace(username) || isNullOrWhiteSpace(password)) {
@@ -18,14 +25,20 @@ module.exports = function () {
       res.status(400).send({ name: 'BadInput', message: 'Cognito Variables not set', statusCode: 400 });
       return;
     }
+
+    // User pool object
     const userPool = new AWSCognito.CognitoUserPool({
       UserPoolId: userPoolId,
       ClientId: clientId
     });
+
+    // cognito user object
     const cognitoUser = new AWSCognito.CognitoUser({
       Username: username,
       Pool: userPool
     })
+
+    // call to manager class to sign in
     const authManager = new AuthManager();
     const authResponse = authManager.signInUser(username, password, cognitoUser);
     
@@ -35,10 +48,18 @@ module.exports = function () {
       res.status(error.statusCode).send(error);
     })
   };
+
+  /**
+   * call to register a new user to our userpool
+   * @param {*} req request object containing headers and post data
+   * @param {*} res response object that will have data sent through it
+   */
   this.register = function (req, res) {
     const username = req.body.username;
     const password = req.body.password;
     const userId = req.body.userId;
+
+    // user pool enviroment variables
     const userPoolId = process.env.USER_POOL_ID;
     const clientId = process.env.USER_POOL_CLIENT;
     if (isNullOrWhiteSpace(username) || isNullOrWhiteSpace(password) || isNullOrWhiteSpace(userId)) {
@@ -49,10 +70,14 @@ module.exports = function () {
       res.status(400).send({ name: 'MisingInput', message: 'Cognito Variables not set', statusCode: 400 });
       return;
     }
+
+    // User pool object
     const userPool = new AWSCognito.CognitoUserPool({
       UserPoolId: userPoolId,
       ClientId: clientId
     });
+
+    // call to manager class to register
     const authManager = new AuthManager();
     const authResponse = authManager.registerUser(username, password, userId, userPool);
 
@@ -66,9 +91,17 @@ module.exports = function () {
       res.status(error.statusCode).send(error);
     });
   }
+  
+  /**
+   * call to confirm a user account in our userpool
+   * @param {*} req request object containing headers and post data
+   * @param {*} res response object that will have data sent through it
+   */
   this.confirm = function (req, res) {
     const email = req.body.username;
     const verificationCode = req.body.verificationCode;
+
+    // user pool enviroment variables
     const userPoolId = process.env.USER_POOL_ID;
     const clientId = process.env.USER_POOL_CLIENT;
     if (isNullOrWhiteSpace(email) || isNullOrWhiteSpace(verificationCode)) {
@@ -79,15 +112,20 @@ module.exports = function () {
       res.status(400).send({ name: 'MisingInput', message: 'Cognito Variables not set', statusCode: 400 });
       return;
     }
+
+    // User pool object
     const userPool = new AWSCognito.CognitoUserPool({
       UserPoolId: userPoolId,
       ClientId: clientId
     });
+
+    // cognito user object
     const cognitoUser = new AWSCognito.CognitoUser({
       Username: email,
       Pool: userPool
     });
 
+    // call to manager class to register
     const authManager = new AuthManager();
     const confirmResponse = authManager.confirmUser(cognitoUser, verificationCode);
 
@@ -104,13 +142,22 @@ module.exports = function () {
       res.status(error.statusCode).send(error);
     });
   }
+
+  /**
+   * call to register a new user to our userpool
+   * @param {*} req request object containing headers and post data
+   * @param {*} res response object that will have data sent through it
+   */
   this.validate = async function (req, res) {
+    // headers containing JWTs to validate
     const authToken = req.headers['auth-token'];
     const idToken = req.headers['identity-token'];
     if (isNullOrWhiteSpace(authToken) || isNullOrWhiteSpace(idToken)) {
       res.status(400).send({ name: 'MisingInput', message: 'Required headers are missing', statusCode: 400 });
       return;
     }
+
+    // user pool enviroment variables
     const userPoolId = process.env.USER_POOL_ID;
     const clientId = process.env.USER_POOL_CLIENT;
     if (isNullOrWhiteSpace(userPoolId) || isNullOrWhiteSpace(clientId)) {
@@ -119,6 +166,7 @@ module.exports = function () {
     }
     const authManager = new AuthManager();
     try {
+      // calls to manager to check both the Id and Access tokens
       const accessResult = await authManager.checkToken(authToken, 'access');
       const identityResult = await authManager.checkToken(idToken, 'id');
 

@@ -1,4 +1,4 @@
-// test_post.js
+// routes for the frontend to communicate to cognito
 
 const CognitoController = require('../controllers/cognitoController');
 

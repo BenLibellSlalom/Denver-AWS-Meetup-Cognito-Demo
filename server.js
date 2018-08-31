@@ -1,4 +1,5 @@
 // server.js
+// Builds out the node server and listens on port 8000
 
 const express = require('express');
 const bodyParser = require('body-parser');

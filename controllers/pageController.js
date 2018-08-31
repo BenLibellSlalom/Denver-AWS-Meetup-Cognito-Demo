@@ -1,6 +1,7 @@
 module.exports = function () {
   const fs = require('fs');
 
+  // functions to serve out HTML pages for the site
 	this.login = function (req, res){
     const fileName = require.resolve('../content/index.html');
     const content = fs.readFileSync(fileName, 'utf8');
