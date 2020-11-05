@@ -112,7 +112,8 @@ module.exports = function () {
    * @param {string} tokenType the type of cognito JWT the token claims to be
    */
   this.checkToken = async function(token, tokenType) {
-    const cognitoUrl = 'https://cognito-idp.us-east-2.amazonaws.com';
+    // make sure this matches the region your userpool is in
+    const cognitoUrl = 'https://cognito-idp.us-west-2.amazonaws.com';
     if (token === undefined || tokenType === undefined || cognitoUrl === undefined) {
       return false;
     }

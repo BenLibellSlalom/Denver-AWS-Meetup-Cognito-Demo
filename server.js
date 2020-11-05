@@ -1,16 +1,14 @@
-// server.js
-// Builds out the node server and listens on port 8000
-
 const express = require('express');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 
 const app = express();
-
-const port = 8000;
-
 app.use(bodyParser.json());
+app.use(cors());
 
-require("./routes/route-config") (app)
+require('./routes/route-config')(app);
+
+const port = process.env.PORT || 8080;
 app.listen(port, () => {
-	console.log('Service is listening on port ' + port);
+  console.log(`Service is listening on port ${port}`);
 });

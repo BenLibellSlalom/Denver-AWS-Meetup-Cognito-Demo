@@ -54,7 +54,7 @@
                     display: inline-block;
                     font-size: 16px;
                     margin: 4px 2px;
-                    cursor: pointer;" href="http://localhost:8000/">Back to Login</a>
+                    cursor: pointer;" href="http://localhost:8080/">Back to Login</a>
                   </p>
                 </div>
               </td>
@@ -78,7 +78,7 @@
         const password = $('#cognitoPass').val();
         $.ajax({
           type: 'POST',
-          url: 'http://localhost:8000/register',
+          url: 'http://localhost:8080/register',
           contentType: 'application/json',
           dataType: 'json',
           data: JSON.stringify({
@@ -88,7 +88,7 @@
           }),
           success: function(data) {
             console.log(data.message);
-            window.location.href = 'http://localhost:8000/confirm';
+            window.location.href = 'http://localhost:8080/confirm';
           },
           error: function(request, status, error) {
             response = request.responseJSON
